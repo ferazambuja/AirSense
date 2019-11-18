@@ -43,6 +43,8 @@
 #define DEF_SAMPLE_MULTIPLIER 2 //sample rate = DEF_SAMPLE_MULTIPLIER * 3 seconds (intrinsic lib sample rate)
 #define MAX_TOPIC_LEN 1024
 #define MAX_SEND_ERRORS 5 //max consecutive MQTT send errors
+#define DEF_USER_NAME "MQTT_USERNAME"
+#define DEF_PASSWORD "MQTT_PASSWORD"
 
 int g_i2cFid; // I2C Linux device handle
 int i2c_address;
@@ -452,6 +454,8 @@ int main(int argc, char **argv)
   const char* broker = DEF_ADDR ;
   const char* port = DEF_PORT;
   const char* ptopic = DEF_TOPIC;
+  const char* user_name = DEF_USER_NAME;
+  const char* password = DEF_PASSWORD; 
   i2c_address = BME680_I2C_ADDR_PRIMARY;
   size_t len;
   char mname[256];
@@ -538,7 +542,7 @@ int main(int argc, char **argv)
   uint8_t sendbuf[4096]; /* sendbuf should be large enough to hold multiple whole mqtt messages */
   uint8_t recvbuf[1024]; /* recvbuf should be large enough any whole mqtt message expected to be received */
   mqtt_init(&client, sockfd, sendbuf, sizeof(sendbuf), recvbuf, sizeof(recvbuf), publish_callback);
-  mqtt_connect(&client, sensor_id, NULL, NULL, 0, NULL, NULL, 0, 400);
+  mqtt_connect(&client, sensor_id, NULL, NULL, 0, user_name, password, 0, 400);
 
   /* check that we don't have any errors */
   if (client.error != MQTT_OK) {
